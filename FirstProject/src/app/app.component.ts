@@ -4,8 +4,8 @@ import { Component } from "@angular/core";
   selector: 'pm-root',
   template:`
     <div>
-    <h3> {{pageTitle}} </h3>
-    <div>My First Component</div>
+     <h3> {{pageTitle}} </h3>
+     <!--<div>My First Component</div>-->
     <pm-products></pm-products>
   </div>
   `
