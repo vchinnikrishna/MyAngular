@@ -12,7 +12,7 @@ export class ProductListcomponent implements OnInit{
     imageWidth: number = 50;
     imageMargin: number = 2;
     showImage: boolean =false;
-    
+    errorMessage: string = '';
     // listFilter: string = "cart";
     private _listfilter : string = '';
     get listFilter(): string{
@@ -25,7 +25,10 @@ export class ProductListcomponent implements OnInit{
         this.filteredProducts = this.preformFilter(value);
     }
 
-    constructor(private productService: ProductService ){}
+    constructor(private productService: ProductService ){
+
+
+    }
 
     filteredProducts: IProduct[] = [];
     products: IProduct[]=[];
@@ -37,8 +40,14 @@ export class ProductListcomponent implements OnInit{
     ngOnInit(): void{
         // console.log("In OnInit");
         //this.listFilter = "cart";
-        this.products = this.productService.getProducts();
-        this.filteredProducts = this.products;
+        this.productService.getProducts().subscribe({
+            next: products => {
+                this.products = products;
+                this.filteredProducts = this.products;
+            },
+            error: err => this.errorMessage = err
+        });
+        // this.filteredProducts = this.products;
     }
 
     preformFilter(filterBy: string) : IProduct[]{
