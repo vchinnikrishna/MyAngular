@@ -1,18 +1,21 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Subscription } from "rxjs";
 import { ProductService } from "./product.service";
 import { IProduct } from "./products";
 
 @Component({
-    selector: 'pm-products',
+    //selector: 'pm-products',
     templateUrl: './product-list.component.html',
     styleUrls:['./product-list.component.css']
 })
-export class ProductListcomponent implements OnInit{
+export class ProductListcomponent implements OnInit, OnDestroy{
     pageTitle: string = 'Product List';
     imageWidth: number = 50;
     imageMargin: number = 2;
     showImage: boolean =false;
     errorMessage: string = '';
+    sub!: Subscription;
+
     // listFilter: string = "cart";
     private _listfilter : string = '';
     get listFilter(): string{
@@ -40,7 +43,7 @@ export class ProductListcomponent implements OnInit{
     ngOnInit(): void{
         // console.log("In OnInit");
         //this.listFilter = "cart";
-        this.productService.getProducts().subscribe({
+        this.sub = this.productService.getProducts().subscribe({
             next: products => {
                 this.products = products;
                 this.filteredProducts = this.products;
@@ -48,6 +51,10 @@ export class ProductListcomponent implements OnInit{
             error: err => this.errorMessage = err
         });
         // this.filteredProducts = this.products;
+    }
+
+    ngOnDestroy(){
+        this.sub.unsubscribe();
     }
 
     preformFilter(filterBy: string) : IProduct[]{
